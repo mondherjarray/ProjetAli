@@ -1,0 +1,116 @@
+<section id="basic-form-layouts" *ngIf="isPageLoaded">
+	<form [formGroup]="editDefectForm" (ngSubmit)="onSubmit()">
+		<div class="row">
+			<div class="col-md-6">
+				<div class="card">
+					<div class="card-header">
+						<h4 class="card-title">{{'defects.title2' | translate }} - #{{ defect.generated_id }}</h4>
+					</div>
+					<div class="card-body">
+						<div class="px-3">
+							<div class="form-body">
+								<h4 class="form-section"><i class="fa fa-bug"></i> {{'defects.headings.head1' | translate }}</h4>
+								<div class="row">
+									<div class="col-md-12">
+										<div class="form-group">
+											<label for="defect_name">{{'defects.create.fields.defect_name' | translate }}&nbsp;<span class="text-danger">*</span></label>
+											<input type="text" class="form-control" formControlName="defect_name" id="defect_name" placeholder="{{'defects.create.placeholders.placeholder1' | translate }}" [ngClass]="{ 'is-invalid': isFormSubmitted && defectControl.defect_name.errors }" />
+											<div *ngIf="isFormSubmitted && defectControl.defect_name.errors" class="invalid-feedback">
+												<div *ngIf="defectControl.defect_name.errors.required">{{'defects.create.error_messages.message1' | translate }}</div>
+												<div *ngIf="defectControl.defect_name.errors.maxlength">{{'defects.create.error_messages.message2' | translate }}</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-12">
+										<div class="form-group">
+											<label for="project_version">Montant</label>
+											<input type="number" min="0" class="form-control" formControlName="project_version" id="project_version"  [ngClass]="{ 'is-invalid': isFormSubmitted && defectControl.project_version.errors }" />
+
+											
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="card">
+					<div class="card-header">&nbsp;</div>
+					<div class="card-body">
+						<div class="px-3">
+							<div class="form-body">
+							
+								<h4 class="form-section"><i class="ft-upload"></i> {{'defects.headings.head3' | translate }}</h4>
+								<div class="row">
+									<div class="col-md-12">
+										<div class="form-group">
+											<label>{{'defects.create.fields.choose_file' | translate }}</label>
+											<input type="hidden" formControlName="file">
+											<div class="dropzone dz-clickable" #logodropzone>
+												<div class="dz-default dz-message" *ngIf="isLogoUploaded">
+													<span><strong>{{'defects.create.error_messages.message10' | translate }}</strong></span>
+												</div>
+												<div class="dz-preview dz-image-preview" *ngIf="isLogoLoaded && defect.attachment_hash">
+													<div class="dz-image">
+														<img src="{{apiUrl}}/uploads/defect/{{defect.attachment_hash}}" height="100" width="100" />
+													</div>
+													<a class="btn btn-sm btn-block" (click)="removeDropzoneImage()">{{ 'common.remove_file' | translate }}</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-12" *ngIf="customFields.length > 0">
+				<div class="card">
+					<div class="card-body">
+						<div class="px-3">
+							<div class="form-body">
+								<h4 class="form-section"><i class="ft-star"></i>{{'defects.headings.head4' | translate }}</h4>
+								<div class="row mb-3">
+									<div class="col-md-12">
+										<app-show-custom-field-element [formArray]="'custom_field'"
+											[controls]="editDefectForm.get('custom_field')"
+											[customFields]="customFields"
+											[isFormSubmitted]="isFormSubmitted"
+											[formName]="editDefectForm">
+										</app-show-custom-field-element>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="card">
+					<div class="card-body">
+						<div class="px-3">
+							<div class="form-body">
+								<h4 class="form-section"><i class="ft-message-square"></i>{{'defects.headings.head5' | translate }}</h4>
+								<div class="row mb-3">
+									<div class="col-md-12">
+										<div class="form-group">
+											<label for="description">{{'defects.create.fields.description' | translate }}</label>
+											<app-ngx-editor [config]="editorConfig" formControlName="description" id="description"></app-ngx-editor>
+										</div>
+									</div>
+									<div class="col-md-12 text-right">
+										<a [routerLink]="['/defects']" class="btn btn-cancel mb-0">{{'common.cancel' | translate}}</a>
+										<button type="submit" class="btn btn-submit mb-0">{{'common.update' | translate}}</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</section>

@@ -1,0 +1,115 @@
+<section class="hide_empty_message">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card pl-2 pr-2 pb-2">
+                <!-- Card header -->
+                <div class="card-header pl-0 pr-0 border-bottom">
+                    <h4 class="main-title mt-2"><span>{{'defects.title' | translate}}</span></h4>
+                    <div class="card-buttons">
+                        <a [routerLink]="['/transaction/create']" *ngxPermissionsOnly="['admin', 'super_admin', 'defects_create']" class="btn btn-create mb-0" tooltip="{{'common.create' | translate}}"><i class="fa fa-plus"></i></a>
+                    </div>
+                </div>
+                <!-- Card content -->
+                <div class="card-content pt-3">
+                    <!-- Card body -->
+                    <div class="card-body">
+                        <!-- Filter buttons -->
+                        
+                        <!-- Defect list datatable -->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="table-responsive-xs table-responsive-sm table-responsive-md table-responsive-lg table-responsive-xl overflow-x-auto">
+                                    <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-bordered table-hover b4-datatable" width="100%" id="defects_table">
+                                        <thead>
+                                            <tr>
+                                                <th>{{'defects.columns.id' | translate}}</th>
+                                                <th>{{'defects.columns.defect_name' | translate}}</th>
+                                                <th>Date</th>
+                                                <th>Projet</th>
+                                                <th>Centre</th>
+                                                <th>Montant</th>
+                                                <th>Sociéte</th>
+                                               
+                                                <th>Lieu</th>
+                                                <th>{{'defects.columns.status' | translate}}</th>
+                                                <th>{{'defects.columns.actions' | translate}}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody *ngIf="defects?.length != 0">
+                                            <tr *ngFor="let defect of defects; index as i">
+                                                <td>
+                                                    <a [routerLink]="['/transaction/detail', defect.id]" tooltip="{{'common.view' | translate}}">{{defect.generated_id}}</a>
+                                                </td>
+                                                <td>
+                                                    <ng-container *ngIf="getCheckPermission(defect, 'edit'); else elseBlock">
+                                                        <inline-edit-input [name]="'defect_name'" [type]="'text'" [elementFor]="'defects.inline_edit.defect_name' | translate" [fieldValue]="defect.defect_name" [isRequired]="'true'" (updateValue)="saveDefectDetail(i, 'defect_name', $event);"></inline-edit-input>
+                                                    </ng-container>
+                                                    <ng-template #elseBlock>{{defect.defect_name}}</ng-template>
+                                                </td>
+                                                <td>{{defect.start_date | dateTimeFormatFilter: loginUser.settings.date_format}}</td>
+                                                <td class="budges-status" >
+                                                    <div  *ngFor="let project of projects">
+                                                    <div *ngIf="project.id == defect.project_id">
+                                                       {{project.generated_id}}
+                                                    </div></div>
+                                                </td>   
+                                                <td class="budges-status" >
+                                                    <div  *ngFor="let project of projects">
+                                                    <div *ngIf="project.id == defect.project_id">
+                                                       {{project.team_name}}
+                                                    </div></div>
+                                                </td>         
+                                                 <td>{{defect.project_version}}</td>
+                                                 <td class="budges-status" >
+                                                    <div  *ngFor="let project of projects">
+                                                    <div *ngIf="project.id == defect.project_id">
+                                                       {{project.client_firstname}}
+                                                    </div></div>
+                                                </td>  
+                                                <td class="budges-status" >
+                                                    <div  *ngFor="let project of projects">
+                                                    <div *ngIf="project.id == defect.project_id">
+                                                       {{project.demo_url}}
+                                                    </div></div>
+                                                </td>  
+                                                <td class="status-dropdown">
+                                                    <div class="overdue-td">
+                                                        <ng-container *ngFor="let status of ('defects.status' | translate)">
+                                                            <div class="budges-status">
+                                                                <span class="{{status.class}}" *ngIf="status.id == defect.status">{{status.label}}</span>
+                                                            </div>
+                                                        </ng-container>
+                                                        
+                                                       
+                                                    </div>
+                                                </td>
+                                                <td class="actions-dropdown">
+                                                    <div class="btn-group" dropdown>
+                                                        <button dropdownToggle class="dropdown-toggle btn-action" type="button" id="button-basic-1" aria-controls="dropdown-basic-1"><i class="fa fa-ellipsis-v"></i></button>
+                                                        <ul id="dropdown-basic-1" *dropdownMenu class="dropdown-menu animated fadeIn" role="menu" aria-labelledby="button-basic-1">
+                                                          <!--  <li role="menuitem" *ngIf="getCheckPermission(defect, 'edit')">
+                                                                <a [routerLink]="['/transaction/edit', defect.id]" class="dropdown-item btn btn-edit btn-raised" tooltip="{{'common.edit' | translate}}"><i class="fa fa-pencil-square-o"></i></a>
+                                                            </li>-->
+                                                            <li role="menuitem" *ngIf="getCheckPermission(defect, 'delete')">
+                                                                <a (click)="deleteDefect(defect.id)" class="dropdown-item btn btn-delete btn-raised" tooltip="{{'common.delete' | translate}}"><i class="fa fa-trash-o"></i></a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot *ngIf="defects?.length == 0" class="tfoot_dt">
+                                            <tr>
+                                                <td colspan="9" class="no-data-available text-center">{{'common.datatable.sEmptyTable' | translate}}</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
